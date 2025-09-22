@@ -22,10 +22,11 @@ mongoose
     .catch((err) => console.log(`DB connection error: ${err}`));
     
 app.use(bodyParser.json());
-app.use(cookieParser);
+app.use(cookieParser());
 
 apiRouter.use(userRoutes);
 
-app.use(errorHandling)
+app.use(apiRouter);
+app.use(errorHandling);
 
-app.listen(PORT, console.log(`Listening on port ${PORT}`))
+app.listen(PORT, console.log(`Listening on port ${PORT}`));
