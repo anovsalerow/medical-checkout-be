@@ -1,9 +1,22 @@
 {
+  "name": "medical-checkouts-be",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "BE",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "a.novikov",
+  "license": "ISC",
   "dependencies": {
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.10"
   }
 }
