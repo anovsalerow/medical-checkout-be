@@ -1,6 +1,8 @@
 import express, {Router} from 'express';
 import 'dotenv/config';
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -16,5 +18,8 @@ mongoose
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.log(`DB connection error: ${err}`));
     
+app.use(bodyParser.json());
+app.use(cookieParser);
+
 
 app.listen(PORT, console.log(`Listening on port ${PORT}`))
