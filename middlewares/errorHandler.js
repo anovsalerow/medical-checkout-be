@@ -5,6 +5,12 @@ export class ErrorHandler extends Error {
     };
 };
 
+export class ErrorValidation extends ErrorHandler {
+    constructor(message) {
+        super(400, message);
+    };
+};
+
 export class ErrorUnAuthorized extends ErrorHandler {
     constructor(message) {
         super(401, message);
