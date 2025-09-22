@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
 import { errorHandling } from './middlewares/middlewares.js';
+import userRoutes from './routes/user.routes.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -22,6 +23,8 @@ mongoose
     
 app.use(bodyParser.json());
 app.use(cookieParser);
+
+apiRouter.use(userRoutes);
 
 app.use(errorHandling)
 
