@@ -3,6 +3,7 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import { errorHandling } from './middlewares/middlewares';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -21,5 +22,6 @@ mongoose
 app.use(bodyParser.json());
 app.use(cookieParser);
 
+app.use(errorHandling)
 
 app.listen(PORT, console.log(`Listening on port ${PORT}`))
