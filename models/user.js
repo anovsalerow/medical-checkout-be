@@ -25,7 +25,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    refreashToken: {
+    refreshToken: {
         type: String,
         default: ''
     }
