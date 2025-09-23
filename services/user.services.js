@@ -2,9 +2,16 @@ import bcrypt from 'bcrypt';
 import { ErrorValidation } from '../middlewares/errorHandler.js';
 import {
     addAndSaveNewUser, 
-    getUserByEmailAndPassword
+    getUserByEmailAndPassword,
+    getStoredRefreshToken,
+    removeRefreshToken
 } from '../repositories/user.repositories.js';
-import { createAccessToken, createRefreshToken, verifyAccessToken } from '../utils/token.utils.js';
+import { 
+    createAccessToken, 
+    createRefreshToken, 
+    verifyAccessToken, 
+    verifyRefreshToken 
+} from '../utils/token.utils.js';
 import {ROLES} from '../roles.js';
 
 
@@ -48,4 +55,46 @@ export const getUserId = (req) => {
     }
     const decodedToken = verifyAccessToken(cookies.accessToken);
     return decodedToken ? decodedToken.id : null;
+};
+
+export const getToken = (req) => {
+    const {accessToken, refreshToken} = req?.cookies;
+    if (!accessToken) {
+        throw new ErrorUnauthorized('No accessToken provided');
+    }
+    if (!refreshToken) {
+        throw new ErrorUnauthorized('No refreshToken provided');
+    }
+    return {accessToken, refreshToken};
+};
+
+export const updateTokens = async (req) => {
+    const currentUser = getUserId(req);
+    const {refreshToken} = getToken(req);
+    const storedRefreshToken = currentUser ? await getStoredRefreshToken(currentUser) : null;
+    let newAccessToken = null;
+    let newRefreshToken = null;
+
+    if (refreshToken !== storedRefreshToken) {
+        throw new ErrorForbidden('Invalid refresh token');
+    }
+
+    const decoded = verifyRefreshToken(refreshToken);
+    
+    if (!decoded) {
+        removeRefreshToken(currentUser);
+        throw new ErrorForbidden('Invalid refresh token');
+    }
+    const payload = { 
+        role: decoded.role,
+        id: decoded.id
+    };
+    newAccessToken = createAccessToken(payload);
+    newRefreshToken = createRefreshToken(payload);
+
+    return {
+        newAccessToken,
+        newRefreshToken,
+        userId: currentUser
+    };
 };
