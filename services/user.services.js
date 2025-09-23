@@ -4,7 +4,7 @@ import {
     addAndSaveNewUser, 
     getUserByEmailAndPassword
 } from '../repositories/user.repositories.js';
-import { createAccessToken, createRefreshToken } from '../utils/token.utils.js';
+import { createAccessToken, createRefreshToken, verifyAccessToken } from '../utils/token.utils.js';
 import {ROLES} from '../roles.js';
 
 
@@ -39,4 +39,13 @@ export const signInUser = async ({email, password}, next) => {
         refreshToken,
         userId: userInfo.id
     };
+};
+
+export const getUserId = (req) => {
+    const cookies = req.cookies;
+    if (!cookies?.accessToken) {
+        return null;
+    }
+    const decodedToken = verifyAccessToken(cookies.accessToken);
+    return decodedToken ? decodedToken.id : null;
 };
