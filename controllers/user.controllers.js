@@ -1,5 +1,5 @@
-import { createNewUser, signInUser } from "../services/user.services.js";
-import {saveRefreshToken} from '../repositories/user.repositories.js';
+import { createNewUser, signInUser, getUserId } from "../services/user.services.js";
+import {saveRefreshToken, removeRefreshToken} from '../repositories/user.repositories.js';
 
 export const signUp = async (req, res, next) => {
     const newUser = await createNewUser(req.body, next);
@@ -31,4 +31,15 @@ export const signIn = async (req, res, next) => {
     } catch (err) {
         return next(err);
     }
+};
+
+export const signOut = async (req, res) => {
+    const currentUserId = getUserId(req);
+    console.log(currentUserId)
+    if (!!currentUserId) {
+        await removeRefreshToken(currentUserId);
+    }
+    res.clearCookie('accessToken', {httpOnly: true});
+    res.clearCookie('refreshToken', {httpOnly: true});
+    res.status(200).send('OK');
 };
