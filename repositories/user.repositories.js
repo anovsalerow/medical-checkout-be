@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import {User} from '../models/user.js';
 
 export const addAndSaveNewUser = async (newUser) => {
@@ -12,5 +13,25 @@ export const getUserByEmail = async(email) => {
             role: 1, 
             refreshToken: 1
         }
+    );
+};
+
+export const getUserByEmailAndPassword = async ({email, password}) => {
+    const user = await User.findOne({email});
+    if (user && bcrypt.compare(password, user.password)) {
+        return {
+            id: user._id,
+            role: user.role
+        };
+    };
+    return undefined;
+};
+
+export const saveRefreshToken = async (userId, refreshToken) => {
+    const options = {new: false};
+    await User.findByIdAndUpdate(
+        userId,
+        {refreshToken},
+        options
     );
 };
