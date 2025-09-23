@@ -6,7 +6,11 @@ const generateToken = (payload, secret, expiresIn) => {
 };
 
 const verifyToken = (token, secret) => {
-    return jwt.verify(token, secret);
+    try {
+        return jwt.verify(token, secret);
+    } catch {
+        return null
+    };
 };
 
 export const createAccessToken = (payload) => {
