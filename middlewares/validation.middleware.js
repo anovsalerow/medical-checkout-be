@@ -1,5 +1,5 @@
-import { ErrorValidation } from "./errorHandler";
-import { signUpValidationSchema } from "../schemas/validation.schemas";
+import { ErrorValidation } from "./errorHandler.js";
+import { signUpValidationSchema } from "../schemas/validation.schemas.js";
 
 export const validationSignUpData = (req, res, next) => {
     const {error} = signUpValidationSchema.validate(req.body);
