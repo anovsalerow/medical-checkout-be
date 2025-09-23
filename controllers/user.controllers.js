@@ -11,7 +11,6 @@ export const signIn = async (req, res, next) => {
     try {
         const {accessToken, refreshToken, userId} = await signInUser(req.body, next);
         await saveRefreshToken(userId, refreshToken);
-        console.log('accessToken')
         res.cookie(
             'accessToken',
             accessToken,
@@ -20,7 +19,6 @@ export const signIn = async (req, res, next) => {
                 maxAge: 60 * 60 * 1000
             }
         );
-        console.log('refreshToken')
         res.cookie(
             'refreshToken',
             refreshToken,
@@ -30,7 +28,6 @@ export const signIn = async (req, res, next) => {
             }
         );
         res.status(200).send('OK');
-        console.log('ok')
     } catch (err) {
         return next(err);
     }
