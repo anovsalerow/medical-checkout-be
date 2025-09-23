@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
-import { errorHandling } from './middlewares/middlewares.js';
+import { errorHandling } from './middlewares/error.middleware.js';
 import userRoutes from './routes/user.routes.js';
 
 const app = express();
