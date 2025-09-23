@@ -35,3 +35,12 @@ export const saveRefreshToken = async (userId, refreshToken) => {
         options
     );
 };
+
+export const removeRefreshToken = async (userId) => {
+    const options = { new: false };
+    await User.findByIdAndUpdate(
+        userId,
+        {refreshToken: ''},
+        options
+    );
+};
