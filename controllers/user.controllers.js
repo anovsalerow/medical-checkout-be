@@ -1,5 +1,6 @@
-import { createNewUser, signInUser, getUserId } from "../services/user.services.js";
+import { createNewUser, signInUser, getUserId, updateTokens } from "../services/user.services.js";
 import {saveRefreshToken, removeRefreshToken} from '../repositories/user.repositories.js';
+import { cookieConfig } from "../config/cookie.config.js";
 
 export const signUp = async (req, res, next) => {
     const newUser = await createNewUser(req.body, next);
@@ -14,18 +15,12 @@ export const signIn = async (req, res, next) => {
         res.cookie(
             'accessToken',
             accessToken,
-            {
-                httpOnly: true,
-                maxAge: 60 * 60 * 1000
-            }
+            cookieConfig.access
         );
         res.cookie(
             'refreshToken',
             refreshToken,
-            {
-                httpOnly: true,
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            }
+            cookieConfig.refresh
         );
         res.status(200).send('OK');
     } catch (err) {
@@ -35,11 +30,23 @@ export const signIn = async (req, res, next) => {
 
 export const signOut = async (req, res) => {
     const currentUserId = getUserId(req);
-    console.log(currentUserId)
     if (!!currentUserId) {
         await removeRefreshToken(currentUserId);
     }
     res.clearCookie('accessToken', {httpOnly: true});
     res.clearCookie('refreshToken', {httpOnly: true});
     res.status(200).send('OK');
+};
+
+export const renewalToken = async (req, res, next) => {
+    try {
+        const {newAccessToken, newRefreshToken, userId} = await updateTokens(req);
+        await saveRefreshToken(userId, newRefreshToken);
+        res.cookie('accessToken', newAccessToken, cookieConfig.access);
+        res.cookie('refreshToken', newRefreshToken, cookieConfig.refresh);
+
+        res.status(200).send('OK');
+    } catch (err) {
+        next(err);
+    }
 };
