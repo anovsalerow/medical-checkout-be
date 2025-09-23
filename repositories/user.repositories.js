@@ -44,3 +44,8 @@ export const removeRefreshToken = async (userId) => {
         options
     );
 };
+
+export const getStoredRefreshToken = async (userId) => {
+  const user = await User.findById(userId, {refreshToken: 1});
+  return user?.refreshToken;
+};
