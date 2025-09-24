@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { ErrorValidation } from '../middlewares/errorHandler.js';
+import { ErrorValidation, ErrorUnAuthorized, ErrorForbidden } from '../middlewares/errorHandler.js';
 import {
     addAndSaveNewUser, 
     getUserByEmailAndPassword,
@@ -57,20 +57,17 @@ export const getUserId = (req) => {
     return decodedToken ? decodedToken.id : null;
 };
 
-export const getToken = (req) => {
-    const {accessToken, refreshToken} = req?.cookies;
-    if (!accessToken) {
-        throw new ErrorUnauthorized('No accessToken provided');
-    }
+export const getRefreshToken = (req) => {
+    const {refreshToken} = req?.cookies;
     if (!refreshToken) {
-        throw new ErrorUnauthorized('No refreshToken provided');
+        throw new ErrorUnAuthorized('No refreshToken provided');
     }
-    return {accessToken, refreshToken};
+    const decodedToken = verifyRefreshToken(refreshToken);
+    return {id: decodedToken?.id, refreshToken};
 };
 
 export const updateTokens = async (req) => {
-    const currentUser = getUserId(req);
-    const {refreshToken} = getToken(req);
+    const {id: currentUser, refreshToken} = getRefreshToken(req);
     const storedRefreshToken = currentUser ? await getStoredRefreshToken(currentUser) : null;
     let newAccessToken = null;
     let newRefreshToken = null;
