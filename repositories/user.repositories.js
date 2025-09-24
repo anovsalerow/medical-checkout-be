@@ -49,3 +49,7 @@ export const getStoredRefreshToken = async (userId) => {
   const user = await User.findById(userId, {refreshToken: 1});
   return user?.refreshToken;
 };
+
+export const getUser = async (userId) => {
+  return User.findById(userId);
+};
