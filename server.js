@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 
 import { errorHandling } from './middlewares/error.middleware.js';
 import userRoutes from './routes/user.routes.js';
+import cartRoutes from './routes/cart.routes.js';
+import productRoutes from './routes/product.routes.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -25,6 +27,8 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 apiRouter.use(userRoutes);
+apiRouter.use('/cart', cartRoutes);
+apiRouter.use('/product', productRoutes);
 
 app.use(apiRouter);
 app.use(errorHandling);
