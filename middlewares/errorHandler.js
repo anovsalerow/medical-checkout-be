@@ -34,3 +34,9 @@ export class ErrorUserAlreadyExist extends ErrorHandler {
         super(409, message);
     };
 };
+
+export class ErrorReadWriteFile extends ErrorHandler {
+    constructor(message) {
+        super(500, message);
+    }
+}
