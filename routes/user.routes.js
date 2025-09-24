@@ -11,6 +11,6 @@ const router = Router();
 router.post('/register', signUpMiddlewareArray, signUp);
 router.post('/login', signIn);
 router.post('/logout', signOut);
-router.post('/renewal', isAuthorized(allRoles), renewalToken);
+router.post('/renewal', renewalToken);
 
 export default router;
