@@ -3,6 +3,7 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 import { errorHandling } from './middlewares/error.middleware.js';
 import userRoutes from './routes/user.routes.js';
@@ -23,6 +24,12 @@ mongoose
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.log(`DB connection error: ${err}`));
     
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    })
+);
 app.use(bodyParser.json());
 app.use(cookieParser());
 
