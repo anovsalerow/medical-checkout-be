@@ -1,5 +1,5 @@
 import { createNewUser, signInUser, getUserId, updateTokens } from "../services/user.services.js";
-import {saveRefreshToken, removeRefreshToken} from '../repositories/user.repositories.js';
+import {saveRefreshToken, removeRefreshToken, getUser} from '../repositories/user.repositories.js';
 import { cookieConfig } from "../config/cookie.config.js";
 
 export const signUp = async (req, res, next) => {
@@ -22,7 +22,7 @@ export const signIn = async (req, res, next) => {
             refreshToken,
             cookieConfig.refresh
         );
-        res.status(200).send('OK');
+        res.status(200).json({ user: {id: userId }});
     } catch (err) {
         return next(err);
     }
@@ -45,8 +45,12 @@ export const renewalToken = async (req, res, next) => {
         res.cookie('accessToken', newAccessToken, cookieConfig.access);
         res.cookie('refreshToken', newRefreshToken, cookieConfig.refresh);
 
-        res.status(200).send('OK');
+        res.status(200).json({ user: {id: userId }});
     } catch (err) {
         next(err);
     }
+};
+
+export const checkAuth = async (req, res) => {
+    res.status(200).json({ user: {id: getUserId(req) }});
 };
