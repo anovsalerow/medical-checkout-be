@@ -37,7 +37,7 @@ export const createNewUser = async ({email, password, role=ROLES.CUSTOMER}, next
 export const signInUser = async ({email, password}, next) => {
     const userInfo = await getUserByEmailAndPassword({email, password});
     if (!userInfo) {
-        return next(new ErrorValidation('Incorrect email or password'));
+        throw new ErrorValidation('Incorrect email or password');
     };
     const accessToken = createAccessToken(userInfo);
     const refreshToken = createRefreshToken(userInfo);
