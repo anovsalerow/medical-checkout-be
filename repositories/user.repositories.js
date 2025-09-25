@@ -18,7 +18,8 @@ export const getUserByEmail = async(email) => {
 
 export const getUserByEmailAndPassword = async ({email, password}) => {
     const user = await User.findOne({email});
-    if (user && bcrypt.compare(password, user.password)) {
+    const isCorrectPwd = await bcrypt.compare(password, user.password);
+    if (user && isCorrectPwd) {
         return {
             id: user._id,
             role: user.role
