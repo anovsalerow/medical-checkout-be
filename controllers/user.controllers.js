@@ -5,7 +5,7 @@ import { cookieConfig } from "../config/cookie.config.js";
 export const signUp = async (req, res, next) => {
     const newUser = await createNewUser(req.body, next);
 
-    return res.status(201).json(newUser);
+    return await signIn(req, res, next);
 };
 
 export const signIn = async (req, res, next) => {
