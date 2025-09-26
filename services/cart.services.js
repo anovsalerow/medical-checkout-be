@@ -96,5 +96,5 @@ export const getCartByUserId = async (userId) => {
     if (!cart) {
         return await createNewCart(currentUser._id);
     }
-    return cart
+    return cart.items
 }; 
