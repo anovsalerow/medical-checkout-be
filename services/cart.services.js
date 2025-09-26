@@ -5,8 +5,13 @@ import {
     findCartByUserIdAndUpdate,
     findOrderByUserIdAndUpdate,
     getProductsFromCartByUserId,
-    findCartByUserId
+    findCartByUserId,
+    createCart
 } from "../repositories/cart.repositories.js";
+
+const createNewCart = async (userId) => {
+    return await createCart(userId);
+};
 
 export const addProductToCart = async (userId, {productId}) => {
     const foundProductById = await getProductById(productId);
@@ -81,3 +86,15 @@ export const createCheckoutOrder = async (userId) => {
         }
     );
 };
+
+export const getCartByUserId = async (userId) => {
+    const currentUser = await getUser(userId);
+    if (!currentUser) {
+        throw new ErrorObjectNotFound("User not found");
+    }
+    const cart = await getProductsFromCartByUserId(currentUser._id);
+    if (!cart) {
+        return await createNewCart(currentUser._id);
+    }
+    return cart
+}; 
