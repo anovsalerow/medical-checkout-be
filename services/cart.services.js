@@ -6,7 +6,8 @@ import {
     findOrderByUserIdAndUpdate,
     getProductsFromCartByUserId,
     findCartByUserId,
-    createCart
+    createCart,
+    createNewOrder
 } from "../repositories/cart.repositories.js";
 
 const createNewCart = async (userId) => {
@@ -97,4 +98,13 @@ export const getCartByUserId = async (userId) => {
         return await createNewCart(currentUser._id);
     }
     return { items: cart.items };
-}; 
+};
+
+export const addNewOrder = async (userId) => {
+    const cartItems = await getProductsFromCartByUserId(userId);
+   
+    return await createNewOrder(
+        userId, 
+        cartItems.items
+    );
+};
