@@ -2,7 +2,7 @@ export const cookieConfig = {
     access: {
         httpOnly: true,
         maxAge: 60 * 60 * 1000,
-        SameSite: none
+        SameSite: None
     },
     refresh: {
         httpOnly: true,
