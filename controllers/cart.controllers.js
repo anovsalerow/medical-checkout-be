@@ -18,7 +18,7 @@ export const addProductByIdToCart = async (req, res, next) => {
 export const removeProductByIdFromCart = async (req, res, next) => {
     try {
         const cart = await removeProductFromCart(getUserId(req), req.params);
-        res.status(200).json(cart);
+        res.status(200).json({items: cart.items});
     } catch (err) {
         next(err);
     }
