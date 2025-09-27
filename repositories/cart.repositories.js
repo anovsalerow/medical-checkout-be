@@ -1,5 +1,6 @@
 import {Cart} from "../models/cart.js";
 import {Order} from "../models/order.js";
+import { OrderHistory } from "../models/orderHistory.js";
 
 export const createCart = async (userId) => {
     return new Cart({
@@ -41,4 +42,11 @@ export const findOrderByUserIdAndUpdate = async (userId, newData) => {
 
 export const findCartByUserId = async (userId) => {
     return Cart.findOne({userId});
+};
+
+export const createNewOrder = async (userId, items) => {;
+    return new OrderHistory({
+        userId,
+        items
+    }).save();
 };
