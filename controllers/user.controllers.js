@@ -33,8 +33,18 @@ export const signOut = async (req, res) => {
     if (!!currentUserId) {
         await removeRefreshToken(currentUserId);
     }
-    res.clearCookie('accessToken', {httpOnly: true});
-    res.clearCookie('refreshToken', {httpOnly: true});
+    res.clearCookie(
+        'accessToken', 
+        {httpOnly: true,
+        sameSite: "None",
+        secure: true
+        });
+    res.clearCookie(
+        'refreshToken', 
+        {httpOnly: true,
+        sameSite: "None",
+        secure: true
+        });
     res.status(200).send('OK');
 };
 
