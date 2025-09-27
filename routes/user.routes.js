@@ -13,5 +13,6 @@ router.post('/login', signIn);
 router.post('/logout', signOut);
 router.post('/renewal', renewalToken);
 router.get('/me', isAuthorized(allRoles), checkAuth);
+router.get('/', (req, res) => res.send('API работает'));
 
 export default router;
