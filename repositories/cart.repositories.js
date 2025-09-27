@@ -22,7 +22,7 @@ export const findCartByUserIdAndUpdate = async (userId, newData, {arrayFilters})
         {userId},
         newData,
         options
-    ).populate('items', '_id title price color formFactor');
+    ).populate('items.productId', '_id title price color formFactor');
 };
 
 export const findOrderByUserIdAndUpdate = async (userId, newData) => {
