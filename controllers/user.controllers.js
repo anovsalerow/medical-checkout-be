@@ -2,27 +2,36 @@ import { createNewUser, signInUser, getUserId, updateTokens } from "../services/
 import {saveRefreshToken, removeRefreshToken, getUser} from '../repositories/user.repositories.js';
 import { cookieConfig } from "../config/cookie.config.js";
 
-export const signUp = async (req, res, next) => {
-    const newUser = await createNewUser(req.body, next);
+const sendAuthResponse = (res, userId, accessToken, refreshToken) => {
+    res.cookie(
+        'accessToken',
+        accessToken,
+        cookieConfig.access
+    );
+    res.cookie(
+        'refreshToken',
+        refreshToken,
+        cookieConfig.refresh
+    );
+    return res.status(200).json({ user: {id: userId }})
+};
 
-    return await signIn(req, res, next);
+export const signUp = async (req, res, next) => {
+    try {
+        await createNewUser(req.body, next);
+        const {accessToken, refreshToken, userId} = await signInUser(req.body, next);
+        await saveRefreshToken(userId, refreshToken);
+        return sendAuthResponse(res, userId, accessToken, refreshToken);
+    } catch (err) {
+        next(err);
+    };
 };
 
 export const signIn = async (req, res, next) => {
     try {
         const {accessToken, refreshToken, userId} = await signInUser(req.body, next);
         await saveRefreshToken(userId, refreshToken);
-        res.cookie(
-            'accessToken',
-            accessToken,
-            cookieConfig.access
-        );
-        res.cookie(
-            'refreshToken',
-            refreshToken,
-            cookieConfig.refresh
-        );
-        res.status(200).json({ user: {id: userId }});
+        return sendAuthResponse(res, userId, accessToken, refreshToken);
     } catch (err) {
         return next(err);
     }
